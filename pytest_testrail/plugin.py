@@ -320,6 +320,10 @@ class PyTestRailPlugin(object):
         if self.include_all:
             print('[{}] Option "Include all testcases from test suite for test run" activated'.format(TESTRAIL_PREFIX))
 
+        # Exclude not-found/invalid cases
+        valid_tests = [test.get('case_id') for test in self.get_tests(testrun_id)['tests']]
+        self.results = [result for result in self.results if result.get('case_id') in valid_tests]
+
         # Publish results
         data = {'results': []}
         for result in self.results:
